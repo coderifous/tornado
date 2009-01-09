@@ -15,6 +15,7 @@ class ApplicationFinderTest < Test::Unit::TestCase
       Finder.app.expects(:windows).returns(mock1)
       Finder.minimize_all_windows
     end
+    
   end
   
 end
