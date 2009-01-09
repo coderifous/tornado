@@ -19,5 +19,17 @@ class OSX
     def running_applications
       system_events.application_processes.get.collect { |a| a.name.get }
     end
+    
+    def desktop_size
+      @desktop_size ||= Finder.desktop.window.bounds.get
+    end
+    
+    def desktop_width
+      desktop_size[2]
+    end
+    
+    def desktop_height
+      desktop_size[3]
+    end
   end
 end

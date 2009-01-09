@@ -6,3 +6,6 @@ module Tornado::Applications::Textmate
     end
   end
 end
+
+# in case I jack up textmate's drawer again:
+# defaults write com.macromates.textmate OakProjectDrawerWidth 100

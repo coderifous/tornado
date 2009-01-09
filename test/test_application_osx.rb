@@ -4,6 +4,14 @@ class ApplicationOSXTest < Test::Unit::TestCase
   
   context "The tornado pseudo-app OSX" do
     
+    should "return the desktop size" do
+      bounds  = mock { expects(:get).returns([0,0,1440,900]) }
+      window  = mock { expects(:bounds).returns(bounds) }
+      desktop = mock { expects(:window).returns(window) }
+      Finder.expects(:desktop).returns(desktop)
+      assert_equal [0,0,1440,900], OSX.desktop_size
+    end
+    
     should "use the System Events app" do
       Appscript.expects(:app).with("System Events")
       OSX.instance_variable_set(:@system_events, nil)

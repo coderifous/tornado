@@ -33,6 +33,60 @@ module GenericActions
   end
 end
 
+module WindowPositionAndResizeActions
+  def current_bounds
+    app.windows[0].bounds.get
+  end
+  
+  def position(cardinal_point)
+    x, y = nil, nil
+    case cardinal_point
+      when :north_east
+        x = OSX.desktop_width - width
+        y = 0
+      when :south_east
+        x = OSX.desktop_width - width
+        y = OSX.desktop_height - height
+      when :north_west
+        x, y = 0, 0
+      when :south_west
+        x = 0
+        y = OSX.desktop_height - height
+    end
+    position_top_left_corner_at(x,y)
+  end
+  
+  def position_top_left_corner_at(x,y)
+    b = current_bounds
+    app.windows[0].bounds.set([x, y, x + width, y + height])
+  end
+  
+  def width
+    b = current_bounds
+    b[2] - b[0]
+  end
+  
+  def height
+    b = current_bounds
+    b[3] - b[1]
+  end
+  
+  def resize(width, height)
+    b = current_bounds
+    width  = absolutize_size(width, :width)
+    height = absolutize_size(height, :height)
+    app.windows[0].bounds.set([ b[0], b[1], b[0] + width, b[1] + height ])
+  end
+  
+  def absolutize_size(size, width_or_height)
+    if size.to_s[-1].chr == "%"
+      OSX.send("desktop_#{width_or_height}") * (size.to_f / 100)
+    else
+      size
+    end
+  end
+end
+
 module ExtensionHelpers
   def extension
     Tornado::Applications.const_get(name)
@@ -58,6 +112,8 @@ end
 class GenericApplication
   include GenericActions
   include ExtensionHelpers
+  include WindowPositionAndResizeActions
+  
   attr_accessor :app, :name
   
   def initialize(opts)
