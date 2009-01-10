@@ -1,4 +1,5 @@
 %w[rubygems rake rake/clean fileutils].each { |f| require f }
+$: << "lib"
 require File.dirname(__FILE__) + '/lib/tornado'
 require 'echoe'
 require 'rake/testtask'
