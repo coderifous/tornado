@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jim Garvin"]
-  s.date = %q{2009-01-09}
+  s.date = %q{2009-01-10}
   s.description = %q{Ruby DSL for easily launching, arranging and doing other simple tasks with Mac OS X applications.}
   s.email = %q{jim at thegarvin dot com}
   s.extra_rdoc_files = ["lib/applications/finder.rb", "lib/applications/firefox.rb", "lib/applications/safari.rb", "lib/applications/terminal.rb", "lib/applications/textmate.rb", "lib/generic_application.rb", "lib/osx.rb", "lib/tornado.rb", "README.markdown"]
