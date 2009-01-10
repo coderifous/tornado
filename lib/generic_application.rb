@@ -38,7 +38,7 @@ module WindowPositionAndResizeActions
     app.windows[0].bounds.get
   end
   
-  def position(cardinal_point)
+  def position(cardinal_point, opts={})
     x, y = nil, nil
     case cardinal_point
       when :north_east
@@ -53,12 +53,17 @@ module WindowPositionAndResizeActions
         x = 0
         y = OSX.desktop_height - height
     end
-    position_top_left_corner_at(x,y)
+    position_top_left_corner_at(x, y, opts)
   end
   
-  def position_top_left_corner_at(x,y)
+  def position_top_left_corner_at(x, y, opts={})
     b = current_bounds
-    app.windows[0].bounds.set([x, y, x + width, y + height])
+    end_bounds = [x, y, x + width, y + height]
+    if opts[:animate]
+      transition_to_bounds(b, end_bounds)
+    else
+      app.windows[0].bounds.set(end_bounds)
+    end
   end
   
   def width
@@ -71,11 +76,31 @@ module WindowPositionAndResizeActions
     b[3] - b[1]
   end
   
-  def resize(width, height)
+  def resize(w, h, opts={})
     b = current_bounds
-    width  = absolutize_size(width, :width)
-    height = absolutize_size(height, :height)
-    app.windows[0].bounds.set([ b[0], b[1], b[0] + width, b[1] + height ])
+    w = absolutize_size(w, :width)
+    h = absolutize_size(h, :height)
+    end_bounds = [ b[0], b[1], b[0] + w, b[1] + h ]
+    if opts[:animate]
+      transition_to_bounds(b, end_bounds)
+    else
+      app.windows[0].bounds.set(end_bounds)
+    end
+  end
+  
+  def transition_to_bounds(start_bounds, end_bounds)
+    # puts "From #{start_bounds.inspect} to #{end_bounds.inspect}"
+    steps = 50
+    factor = 100 / steps
+    1.upto(steps) do |step|
+      frac = step.to_f * factor / 100
+      step_bounds = []
+      0.upto(3) do |x|
+        step_bounds[x] = start_bounds[x] + ((end_bounds[x] - start_bounds[x]) * frac)
+      end
+      # puts "bounds: #{step_bounds.inspect}"
+      app.windows[0].bounds.set(step_bounds)
+    end
   end
   
   def absolutize_size(size, width_or_height)
