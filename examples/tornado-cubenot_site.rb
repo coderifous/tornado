@@ -24,8 +24,8 @@ end
 tell Textmate do
   minimize_all_windows
   open DEV_DIR
-  resize 400, "100%"
-  reposition :east
+  resize 400, "100%", :animate => true
+  reposition :south_east, :animate => true
 end
 
 tell Firefox do
