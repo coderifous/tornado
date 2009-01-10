@@ -2,6 +2,8 @@ require 'rubygems'
 require 'appscript'
 
 module Tornado
+  VERSION = "0.0.1"
+  
   def tell(app, &block)
     if block_given?
       app.instance_eval &block
